@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useRef, useState } from 'react';
+import { schedulePushNotification } from '@/app/_layout';
 
 interface TimerButtonProps {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,12 +33,13 @@ const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
     }, 100);
   };
 
-  const stopTimer = () => {
+  const stopTimer = async () => {
     console.log('Timer stopped');
     clearInterval(intervalIdRef.current);
     intervalIdRef.current = null;
     setRunning(false);
     setModalVisible(true);
+    await schedulePushNotification();
   };
 
   return (
