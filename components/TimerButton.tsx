@@ -1,7 +1,11 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useRef, useState } from 'react';
 
-export default function TimerButton() {
+interface TimerButtonProps {
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(2);
   const [isRunning, setRunning] = useState<boolean>(false);
@@ -33,6 +37,7 @@ export default function TimerButton() {
     clearInterval(intervalIdRef.current);
     intervalIdRef.current = null;
     setRunning(false);
+    setModalVisible(true);
   };
 
   return (
@@ -49,12 +54,19 @@ export default function TimerButton() {
         onPress={() => {
           !isRunning ? startTimer() : stopTimer();
         }}
+        disabled={isRunning}
       >
-        <Text style={{ textAlign: 'center', fontSize: 36 }}>
-          {minutes}:{seconds < 10 && 0}
-          {seconds}
-        </Text>
+        {isRunning ? (
+          <Text style={{ textAlign: 'center', fontSize: 36 }}>
+            {minutes}:{seconds < 10 && 0}
+            {seconds}
+          </Text>
+        ) : (
+          <Text style={{ textAlign: 'center', fontSize: 36 }}>Start</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
-}
+};
+
+export default TimerButton;

@@ -1,7 +1,10 @@
 import { Text, View } from 'react-native';
 import TimerButton from '@/components/TimerButton';
+import FinishModal from '@/components/FinishModal';
+import { useState } from 'react';
 
 export default function Index() {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   return (
     <View
       style={{
@@ -11,7 +14,11 @@ export default function Index() {
         alignItems: 'center',
       }}
     >
-      <TimerButton />
+      <TimerButton setModalVisible={setModalVisible} />
+      <FinishModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </View>
   );
 }
