@@ -2,27 +2,37 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useRef, useState } from 'react';
 
 export default function TimerButton() {
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const intervalIdRef = useRef(null);
-  const startSecundomer = () => {
-    // @ts-ignore
+  const [seconds, setSeconds] = useState<number>(0);
+  const [minutes, setMinutes] = useState<number>(2);
+  const [isRunning, setRunning] = useState<boolean>(false);
+  const intervalIdRef = useRef<any>(null);
+  const startTimer = () => {
+    setMinutes(2);
+    setSeconds(0);
+    console.log('Timer started');
+    setRunning(true);
     intervalIdRef.current = setInterval(() => {
       setSeconds((prev) => {
-        if (prev === 59) {
-          setMinutes((prev) => prev + 1);
-          return 0;
+        if (prev === 0) {
+          setMinutes((prev) => {
+            if (prev === 0) {
+              stopTimer();
+              return 0;
+            } else return prev - 1;
+          });
+          return 59;
         } else {
-          return prev + 1;
+          return prev - 1;
         }
       });
-    }, 1000);
+    }, 100);
   };
-  const stopSecundomer = () => {
-    // @ts-ignore
+
+  const stopTimer = () => {
+    console.log('Timer stopped');
     clearInterval(intervalIdRef.current);
-    // @ts-ignore
     intervalIdRef.current = null;
+    setRunning(false);
   };
 
   return (
@@ -37,7 +47,7 @@ export default function TimerButton() {
       <TouchableOpacity
         style={{ flex: 1, justifyContent: 'center' }}
         onPress={() => {
-          intervalIdRef.current === null ? startSecundomer() : stopSecundomer();
+          !isRunning ? startTimer() : stopTimer();
         }}
       >
         <Text style={{ textAlign: 'center', fontSize: 36 }}>
