@@ -1,19 +1,36 @@
 import { View, Text, TouchableOpacity, Vibration } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { schedulePushNotification } from '@/app/_layout';
 
 interface TimerButtonProps {
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setFinishModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  initialMinutes: number;
+  initialSeconds: number;
+  resetButtonClicked: boolean;
+  setResetButtonClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
-  const [seconds, setSeconds] = useState<number>(0);
-  const [minutes, setMinutes] = useState<number>(2);
+const TimerButton: React.FC<TimerButtonProps> = ({
+  setFinishModalVisible,
+  initialMinutes,
+  initialSeconds,
+  resetButtonClicked,
+  setResetButtonClicked,
+}) => {
+  const [seconds, setSeconds] = useState<number>(initialSeconds);
+  const [minutes, setMinutes] = useState<number>(initialMinutes);
   const [isRunning, setRunning] = useState<boolean>(false);
   const intervalIdRef = useRef<any>(null);
+  useEffect(() => {
+    if (resetButtonClicked) {
+      console.log('Refresh action');
+      stopTimer();
+    }
+    setResetButtonClicked(false);
+  }, [resetButtonClicked]);
   const startTimer = () => {
-    setMinutes(2);
-    setSeconds(0);
+    setMinutes(initialMinutes);
+    setSeconds(initialSeconds);
     console.log('Timer started');
     setRunning(true);
     intervalIdRef.current = setInterval(() => {
@@ -21,7 +38,7 @@ const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
         if (prev === 0) {
           setMinutes((prev) => {
             if (prev === 0) {
-              stopTimer();
+              onTimeOut();
               return 0;
             } else return prev - 1;
           });
@@ -30,7 +47,7 @@ const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
           return prev - 1;
         }
       });
-    }, 100);
+    }, 1000);
   };
 
   const stopTimer = async () => {
@@ -38,7 +55,11 @@ const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
     clearInterval(intervalIdRef.current);
     intervalIdRef.current = null;
     setRunning(false);
-    setModalVisible(true);
+  };
+
+  const onTimeOut = async () => {
+    stopTimer();
+    setFinishModalVisible(true);
     await schedulePushNotification();
     vibrate();
   };

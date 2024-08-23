@@ -9,20 +9,24 @@ import {
 import React from 'react';
 
 interface FinishModalProps {
-  modalVisible: boolean;
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  finishModalVisible: boolean;
+  setFinishModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FinishModal: React.FC<FinishModalProps> = ({
-  modalVisible,
-  setModalVisible,
+  finishModalVisible,
+  setFinishModalVisible,
 }) => {
   const onPressHandler = () => {
-    setModalVisible(false);
+    setFinishModalVisible(false);
     Vibration.cancel();
   };
   return (
-    <Modal animationType="slide" transparent={true} visible={modalVisible}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={finishModalVisible}
+    >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>It's time</Text>
