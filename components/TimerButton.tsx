@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { schedulePushNotification } from '@/app/_layout';
 
@@ -40,6 +40,12 @@ const TimerButton: React.FC<TimerButtonProps> = ({ setModalVisible }) => {
     setRunning(false);
     setModalVisible(true);
     await schedulePushNotification();
+    vibrate();
+  };
+
+  const vibrate = () => {
+    const PATTERN = [1000, 1500, 1000, 1500, 1000, 1500];
+    Vibration.vibrate(PATTERN);
   };
 
   return (

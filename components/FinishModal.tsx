@@ -1,4 +1,11 @@
-import { View, Text, Modal, Pressable, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  Vibration,
+} from 'react-native';
 import React from 'react';
 
 interface FinishModalProps {
@@ -10,17 +17,21 @@ const FinishModal: React.FC<FinishModalProps> = ({
   modalVisible,
   setModalVisible,
 }) => {
+  const onPressHandler = () => {
+    setModalVisible(false);
+    Vibration.cancel();
+  };
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>It's time</Text>
-          <Pressable
+          <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(false)}
+            onPress={() => onPressHandler()}
           >
             <Text style={styles.textStyle}>Ok</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
